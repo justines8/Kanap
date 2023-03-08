@@ -5,44 +5,38 @@ async function getProducts() {
                 return await data.json();
         }                
         catch (error) {
-                document.querySelector("#items").innerText = "Erreur dans le chargement des données."
+                document.querySelector("#items").innerText = "Erreur dans le chargement des données.";
         }
 }
 async function createProductDom(product) {
-        //création élément lien
-        const lienElement = document.createElement("a");
-        lienElement.href = `./product.html?id=${product._id}`;
-
-        //création élément produit
-        const produitElement = document.createElement("article");
-
-        // création élément image
+        //creation link element 
+        const linkElement = document.createElement("a");
+        linkElement.href = `./product.html?id=${product._id}`;
+        //creation product element 
+        const productElement = document.createElement("article");
+        // creation image element 
         const imageElement = document.createElement("img");
-        // pour trouver l'image du produit dans products
+        // to find product image
         imageElement.src = product.imageUrl;
-
-        // création élément nom
+        // creation name element
         const productName = document.createElement("h3");
-        // pour trouver le nom du produit dans products
+        // to find name product
         productName.innerText = product.name;
-
-        // création élément description
+        // creation description element
         const productDescription = document.createElement("p");
-        // pour trouver la description du produit dans products
+        // to find description product
         productDescription.innerText = product.description;
-
-        // rattachement des éléments parents et enfants
+        // reattachment of parent and child elements
         const sectionItems = document.querySelector("#items");
-        sectionItems.appendChild(lienElement);
-        lienElement.appendChild(produitElement);
-        produitElement.appendChild(imageElement);
-        produitElement.appendChild(productName);
-        produitElement.appendChild(productDescription);
+        sectionItems.appendChild(linkElement);
+        linkElement.appendChild(productElement);
+        productElement.appendChild(imageElement);
+        productElement.appendChild(productName);
+        productElement.appendChild(productDescription);
 }
 async function initialize() {   
         const products = await getProducts();
-
-        // boucle for pour parcourir les données et les stocker dans products
+        // for loop to browse the data and store them in product
         for (let i=0; i < products.length; i++) {
                 const product = products[i];
                 createProductDom(product);
