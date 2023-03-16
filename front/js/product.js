@@ -1,4 +1,8 @@
-// id product recovery
+/**
+ * It fetches the data from the API and returns it as a JSON object.
+ * @param id - the id of the product
+ * @returns a promise.
+ */
 const params = window.location.search;
 const url = new URLSearchParams(params);
 const id = url.get('id');
@@ -11,38 +15,41 @@ async function getIdProduct(id) {
             document.querySelector(".item").innerText = "Erreur dans le chargement des données.";
     }
 }
+
+/**
+ * It creates a new image element, sets the src and alt attributes, and appends it to the element with
+ * the class item__img. Then it sets the innerText of the elements with the ids title, description, and
+ * price to the corresponding values in the product object. Then it loops through the colors array in
+ * the product object and creates a new option element for each color, sets the value attribute to the
+ * color, and appends it to the element with the id colors.
+ * @param product - {
+ */
 async function createIdProductDom(product) {
-    // creation image element 
     const imageProduct = document.createElement("img");
-    // to find image product
     imageProduct.src = product.imageUrl;
     imageProduct.alt = product.altTxt;
-    // to add image to its parent
     const imageData = document.querySelector(".item__img");
     imageData.appendChild(imageProduct);
-    // title element recovery
     const titleProduct = document.getElementById("title");
-    // to find product title
     titleProduct.innerText = product.name;
-    // description element recovery
     const descriptionProduct = document.getElementById("description");
-    // to find product description
     descriptionProduct.innerText = product.description;
-    // price element recovery
     const priceProduct = document.getElementById("price");
-    // to find product price
     priceProduct.innerText = product.price;
-    // for loop to browse colors and store them in colorProduct
     for (i = 0; i < product.colors.length; i++) {
         const colorsOption = product.colors[i];
-        // creation color element
         const colorsProduct = document.createElement("option");
         colorsProduct.setAttribute("value", colorsOption);
-        // to find product color
         colorsProduct.innerText = colorsOption;
         document.getElementById("colors").appendChild(colorsProduct);
     }
 }
+
+/**
+ * If the color is not selected, or the quantity is not a number between 1 and 100, then return false.
+ * Otherwise, return true.
+ * @returns a boolean value.
+ */
 function hasColorsAndQuantity() {
     // checking color selection 
     if (colors.value === '') {
@@ -56,6 +63,13 @@ function hasColorsAndQuantity() {
     }
     return true;
 }
+
+/**
+ * It takes three parameters, id, colors, and quantity, and adds them to the localStorage object.
+ * @param id - the id of the product
+ * @param colors - "red"
+ * @param quantity - the quantity of the product
+ */
 function addProduct(id, colors, quantity) {
     const localData = localStorage.getItem("command");
     const cart = JSON.parse(localData)||{};
@@ -70,6 +84,17 @@ function addProduct(id, colors, quantity) {
     localStorage.setItem("command", JSON.stringify(cart));
     window.location.href = 'cart.html';
 }
+
+/**
+ * The function initialize() is an asynchronous function that calls the function getIdProduct() and
+ * passes the id parameter to it. The function getIdProduct() returns a promise that is resolved with
+ * the product object. The function initialize() then calls the function createIdProductDom() and
+ * passes the product object to it. The function createIdProductDom() creates the DOM elements for the
+ * product. The function initialize() then gets the button element and adds an event listener to it.
+ * The event listener calls the function addProduct() and passes the id, colors.value, and
+ * quantity.value parameters to it.
+ * @returns the result of the function addProduct.
+ */
 async function initialize() {   
     const product = await getIdProduct(id);
     createIdProductDom(product);
