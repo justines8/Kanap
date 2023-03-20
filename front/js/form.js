@@ -1,7 +1,7 @@
 const REGEX = {
-  name: /[A-Za-z\é\è\ê\-]+$/,
+  name: /[A-Za-z\é\è\ê\ë\ï\œ\-]{2,50}$/,
   address: /^[a-zA-Z0-9.,_\é\è\ê\ë\ï\œ\-\s]{5,50}[ ]{0,2}$/,
-  city: /[A-Za-z\é\è\ê\-]+$/,
+  city: /[A-Za-z\é\è\ê\ë\ï\œ\-]+$/,
   email: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
   objID: /^[a-f0-9]{32}$/i,
 }
@@ -39,23 +39,27 @@ const validateInput = function (inputName, regex, errorClass, errorMsg) {
  * @param products - [{
  */
 const sendForm = async (contact, products) => {
-  const response = await fetch("http://localhost:3000/api/products/order", {
-    method: "POST",
-    headers: {
-      accept: "application/json",
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      contact: contact,
-      products: products,
-    })
-  });
-  const responseBody = await response.json();
-    if (responseBody) {
-      window.location.href = `/front/html/confirmation.html?orderID=${responseBody.orderId}`;
-    } else { 
-      alert("Erreur");
-    }
+  try {
+    const response = await fetch("http://localhost:3000/api/products/order", {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        contact: contact,
+        products: products,
+      })
+    });
+    const responseBody = await response.json();
+      if (responseBody) {
+        window.location.href = `/front/html/confirmation.html?orderID=${responseBody.orderId}`;
+      } else { 
+        alert("Erreur");
+      }
+  } catch (err) {
+    document.querySelector("#cart__order").innerText = "Erreur dans le chargement des données.";
+  }
 }
 
 /* A function that is called when the form is submitted. It prevents the default action of the form,
